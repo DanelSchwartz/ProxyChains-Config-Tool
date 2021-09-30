@@ -1,0 +1,35 @@
+#!/bin/bash
+#ask root permission for appending the proxy file
+echo "$(whoami)"
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
+#Proxy type(https,http,socks4,socks5)
+#ip
+#port
+
+declare -i port
+
+echo "please choose a proxy type(https,http,socks4,socks5):"
+	read proxytype
+
+echo "please choose a proxy ip:" 
+	read proxyip
+		if [[ $proxyip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then 
+			:
+		else
+			echo "invalid ip adress" 
+		exit
+		fi
+
+echo "please choose a port:"
+	read port
+		if [[ $port>65535 ]]; then
+			echo "invalid port, your port is higher than 65535"
+			exit
+		else
+			:
+		fi
+
+
+echo "$proxytype $proxyip $port"  >> /etc/proxychains.conf
+
+exit 0
